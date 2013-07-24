@@ -1,0 +1,128 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TopToDo</title>
+  <link rel="stylesheet" href="{% static "css/normalize.css"%} ">
+  <link rel="stylesheet" href="{% static "css/bootstrap.css"%} ">
+  <link rel="stylesheet" href="{% static "css/style.css"%} "></head>
+<body>
+  {% verbatim %}
+  <script type="text/x-handlebars" data-template-name="navbar">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand" href="/">TopToDo</a>
+        <ul class="nav pull-right">
+            <li>{{#linkTo 'logout'}}Logout{{/linkTo}}</li>
+        </ul>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="login">
+    <div class="container">
+      <div class="content">
+        <div class="row">
+          <h2>Login</h2>
+          {{#if errorMessage}}
+              <div class="alert alert-error">{{errorMessage}}</div>
+          {{/if}}
+          {{#if infoMessage}}
+            <div class="alert alert-info">{{infoMessage}}</div>
+          {{/if}}
+          <form class="form-inline" {{action doLogin on="submit"}}>
+            <fieldset>
+              <div class="clearfix">{{input value=email type="text" placeholder="Email"}}</div>
+              <div class="clearfix">{{input value=password type="password" placeholder="Password"}}</div>
+              {{input class="btn btn-primary" type="submit" value="Login"}}
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div>{{#linkTo 'register'}}Register new account{{/linkTo}}</div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="register">
+    <div class="container">
+      <div class="content">
+        <div class="row">
+          <h2>Register</h2>
+          {{#if errorMessage}}
+              <div class="alert alert-error">{{errorMessage}}</div>
+          {{/if}}
+          <form class="form-inline" {{action doRegister on="submit"}}>
+            <fieldset>
+              <div class="clearfix">{{input value=email type="text" placeholder="Email"}}</div>
+              <div class="clearfix">{{input value=password type="password" placeholder="Password"}}</div>
+              <div class="clearfix">{{input value=repeatPassword type="password" placeholder="Repeat Password"}}</div>
+              {{input class="btn btn-primary" type="submit" value="Register"}}
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div>{{#linkTo 'login'}}Login{{/linkTo}}</div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="logout">
+    <div class="container">
+        <div class="alert alert-info">You have logged out.</div>
+        {{#linkTo 'login'}}Login{{/linkTo}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="todos">
+      <div class="container">
+          {{render navbar}}
+          <div class="content">
+              <h2>Todos</h2>
+
+              <p>{{view Ember.TextField valueBinding='description' placeholder="I need to ..." action="createTodo"}}</p>
+              {{#if model}}
+                <table class="table">
+                  <tr><td>Done</td><td>Priority</td><td>Description</td><td></td></tr>
+                  {{#each model itemController="todo" }}
+                    <tr>
+                      {{#if isEditing}}
+                        <td></td>
+                        <td>{{view Ember.TextField valueBinding='priority' type="number" }}</td>
+                        <td>{{view Ember.TextField valueBinding='description'}}</td>
+                        <td>
+                          <button {{action "saveTodo"}} class="btn">Save</button>
+                        </td>
+                      {{else}}
+                        <td>{{view Ember.Checkbox checkedBinding="done"}}</td>
+                        <td>{{priority}}</td>
+                        <td>{{description}}</td>
+                        <td>
+                          <button {{action "editTodo"}} class="btn">Edit</button>
+                          <button {{action "removeTodo"}} class="btn">Remove</button>
+                        <td>
+                      {{/if}}
+                    </tr>
+                  {{/each}}
+                </table>
+              {{else}}
+                <p class="text-warning">Nothing to do. Great!</p>
+              {{/if}}
+          </div>
+    </div>
+  </script>
+  {% endverbatim %}
+  <script src="{% static "js/libs/jquery-1.9.1.js" %}"></script>
+  <script src="{% static "js/libs/handlebars-1.0.0-rc.4.js" %}"></script>
+  <script src="{% static "js/libs/ember-1.0.0-rc.6.js" %}"></script>
+  <script src="{% static "js/libs/ember-data-0.13.js" %}"></script>
+  <script src="{% static "js/libs/ember-data-django-rest-adapter.js" %}"></script>
+  <script src="{% static "js/app.js" %}"></script>
+  <script src="{% static "js/router.js" %}"></script>
+  <script src="{% static "js/controllers/login_controller.js" %}"></script>
+  <script src="{% static "js/controllers/register_controller.js" %}"></script>
+  <script src="{% static "js/controllers/todos_controller.js" %}"></script>
+  <script src="{% static "js/controllers/todo_controller.js" %}"></script>
+  <script src="{% static "js/models/todo.js" %}"></script>
+  <script src="{% static "js/models/store.js" %}"></script>
+</body>
+</html>
